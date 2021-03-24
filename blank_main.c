@@ -4,7 +4,6 @@
 
 #include <stdlib.h>
 #include <string.h>
-// change test
 
 // include NESLIB header
 #include "neslib.h"

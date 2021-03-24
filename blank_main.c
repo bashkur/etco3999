@@ -16,7 +16,8 @@
 // BCD arithmetic support
 #include "bcd.h"
 //#link "bcd.c"
-
+#include "Collisions.h"
+//#link "Collisions.c"
 // VRAM update buffer
 #include "vrambuf.h"
 //#link "vrambuf.c"

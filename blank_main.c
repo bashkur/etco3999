@@ -14,7 +14,6 @@
 
 // link the pattern table into CHR ROM
 //#link "chr_generic.s"
-
 // BCD arithmetic support
 #include "bcd.h"
 //#link "bcd.c"

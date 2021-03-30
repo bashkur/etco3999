@@ -22,6 +22,11 @@
 #include "vrambuf.h"
 //#link "vrambuf.c"
 
+struct player{
+  unsigned char x;
+  unsigned char y;
+  unsigned char health;
+};
 /*{pal:"nes",layout:"nes"}*/
 const char PALETTE[32] = { 
   0x03,			// screen color

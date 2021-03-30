@@ -1,22 +1,18 @@
 #include "Collisions.h"
 
 
-unsigned char getProbableDist(unsigned char x1,unsigned char y1 ,unsigned char x2, unsigned char y2){
-  unsigned char dist1 = y2-y1;
-  unsigned char dist2 = x2-x1;
-
-  return(dist2 > dist1 ?  dist2 : dist1);
-  
-}
-
-unsigned char isColliding(unsigned char x1,unsigned char y1 ,unsigned char x2, unsigned char y2){
-  unsigned char dist1 = y2-y1;
-  unsigned char dist2 = x2-x1;
+unsigned char isColliding(unsigned char x,unsigned char y){
+  x + y;
  return 1; 
 }
 
-unsigned char canPlayerMove(char x,char y){
+unsigned char canPlayerMove(unsigned char x,unsigned char y){
+  if(x >= 240)
+    return 0;
+  if(y >= 185)
+    return 0;
+  x = x/8;
+  y = y/8;
   
-  
-  return x,y;
+  return 1;
 }

@@ -73,7 +73,7 @@ void main(void)
   bank_bg(1);
   vram_adr(NTADR_A(0,4));
   vram_unrle(map1);
-  bank_bg(1);
+  //bank_bg(1);
   
   vrambuf_clear();
   set_vram_update(updbuf);

@@ -258,7 +258,7 @@
 .byte $7F,$7F,$7F,$7F,$7F,$7F,$7F,$7F
 .byte $7E,$7E,$7E,$7E,$7E,$7E,$7E,$00
 ;/* use block comment to map a subset of data to sprite bitmaps */
-;/*{w:16,h:16,bpp:1,count:15,brev:1,np:2,pofs:8,remap:[5,0,1,2,4,6,7,8,9,10,11,12]}*/
+;/*{w:16,h:16,bpp:1,count:10,brev:1,np:2,pofs:8,remap:[5,0,1,2,4,6,7,8,9,10,11,12]}*/
 .byte $00,$17,$0F,$1F,$12,$30,$08,$18
 .byte $00,$00,$00,$00,$0D,$0F,$07,$07
 .byte $0F,$1F,$1F,$13,$03,$0E,$0E,$0F

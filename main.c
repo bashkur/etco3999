@@ -35,7 +35,15 @@ const unsigned char map1[241]={
   0x0e,0x01,0x01,0x52,0x53,0x00,0x02,0x04,0xf1,0xf2,0xf3,0x01,0x02,0x21,0x01,0x02,
   0x00
 };
+//start of first player sprite
+#define TILE 0x80
 
+const unsigned char idle[]={
+        0,      0,      TILE+0,   0, 
+        0,      8,      TILE+1,   0, 
+        8,      0,      TILE+2,   0, 
+        8,      8,      TILE+3,   0, 
+        128};
 
 
 struct player{
@@ -68,12 +76,14 @@ void setup_graphics() {
 
 void main(void)
 {
+  char state = 0;
+  int i = 8;
   setup_graphics();
    
   bank_bg(1);
   vram_adr(NTADR_A(0,4));
   vram_unrle(map1);
-  //bank_bg(1);
+  bank_bg(1);
   
   vrambuf_clear();
   set_vram_update(updbuf);
@@ -81,10 +91,24 @@ void main(void)
   // enable rendering
   ppu_on_all();
   //vrambuf_put(NTADR_A(1,1), "hey", 3);
-  vrambuf_flush();
+  
   
   // infinite loop
   while(1) {
     
+    // do this at the start of each frame
+  char oam_id = 0;
+  // Do this when "drawing" each sprite
+  oam_id = oam_meta_spr(i, 103, oam_id, idle);
+  // Do this to "hide" any remaining sprites
+  oam_hide_rest(oam_id);
+    state?--i:++i;
+  
+    if( i > 240  || i < 8){
+      state = !state;
+       
   }
+    vrambuf_flush();
+}
+  
 }

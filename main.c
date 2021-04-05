@@ -63,10 +63,17 @@ const unsigned char idle[]={
         128};
 
 
-struct player{
+struct Entity{
   unsigned char x;
   unsigned char y;
   unsigned char health;
+  const unsigned char* CurSprite;
+  unsigned char is_player;
+};
+
+struct GameState{
+  const unsigned char* CurMap;
+  
 };
 /*{pal:"nes",layout:"nes"}*/
 const char PALETTE[32] = { 
@@ -91,37 +98,46 @@ void setup_graphics() {
   pal_all(PALETTE);
 }
 
+
+
 void main(void)
 {
+  struct Entity P = {
+    8,100,100,idle,1
+  };
   char state = 0;
-  int i = 8;
   setup_graphics();
-  
+   
   bank_bg(1);
   vram_adr(NTADR_A(0,4));
   vram_unrle(map1);
+  bank_bg(1);
   
   vrambuf_clear();
   set_vram_update(updbuf);
   
   // enable rendering
   ppu_on_all();
+  //vrambuf_put(NTADR_A(1,1), "hey", 3);
+  
   
   // infinite loop
-  while(1) {  
-  // do this at the start of each frame
+  while(1) {
+    
+    // do this at the start of each frame
   char oam_id = 0;
   // Do this when "drawing" each sprite
-  oam_id = oam_meta_spr(i, 103, oam_id, idle);
+  oam_id = oam_meta_spr(P.x, P.y, oam_id, P.CurSprite);
   // Do this to "hide" any remaining sprites
   oam_hide_rest(oam_id);
-    state?--i:++i;
+    
+    state?--P.x:++P.x;
   
-    if( i > 240  || i < 8){
+    if( P.x > 240  || P.x < 8){
       state = !state;
        
-    }
-    vrambuf_flush();
   }
+    vrambuf_flush();
+}
   
 }

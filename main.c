@@ -42,33 +42,41 @@ void main(void)
   };
   char i = 3;
   char state = 0;
+  char pad;
   setup_graphics();
    
   bank_bg(1);
   vram_adr(NTADR_A(0,4));
   vram_unrle(GS.CurMap);
-  bank_bg(1);
   
   vrambuf_clear();
   set_vram_update(updbuf);
   
   // enable rendering
-  ppu_on_all();
-  //vrambuf_put(NTADR_A(1,1), "hey", 3);
-  
+  ppu_on_all();  
   
   // infinite loop
     while(1) {
-
       // do this at the start of each frame
       char oam_id = 0;
+      
+      // input polling and movement
+      pad = pad_poll(0);
+      if(pad & PAD_LEFT)
+        P.x--;
+      else if(pad & PAD_RIGHT)
+        P.x++;
+      if(pad & PAD_DOWN)
+        P.y++;
+      else if(pad & PAD_UP)
+        P.y--;
+      
       // Do this when "drawing" each sprite
       P.CurSprite = runanimright[i];
       oam_id = oam_meta_spr(P.x, P.y, oam_id, P.CurSprite);
       // Do this to "hide" any remaining sprites
       oam_hide_rest(oam_id);
 
-      state?--P.x:++P.x;
       if(!(P.x %15)){
         --i;
         if(i== 0){
@@ -81,5 +89,4 @@ void main(void)
       }
       vrambuf_flush();
     }
-  
 }

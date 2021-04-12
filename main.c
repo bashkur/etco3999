@@ -42,10 +42,13 @@ void setup_graphics() {
   pal_all(PALETTE);
 }
 
+
+char debug1;
+
 void main(void)
 {
   struct Entity P = {
-    8, 100, 1, STANDING, 100, playerRStand, 1
+    25, 125, 1, STANDING, 100, playerRStand, 1
   };
   struct GameState GS = {
     map1
@@ -66,39 +69,50 @@ void main(void)
   
   // enable rendering
   ppu_on_all();  
-  
+	
   // infinite loop
     while(1) {
+      
       oam_id = 0;
       
       // poll controller
       pad = pad_poll(0);
       // move left/right
-      if(pad & PAD_LEFT && P.x>0)
+      //ppu_wait_nmi();
+      if(pad & PAD_LEFT )
       {
+        if(canPlayerMove(P.x,P.y+8)){
         P.x--;
         P.dir=1;
         P.state = WALKING_H;
+        }
       }
-      else if(pad & PAD_RIGHT && P.x<240)
+      else if(pad & PAD_RIGHT )
       {
+        if(canPlayerMove(P.x +14,P.y+8)){
         P.x++;
         P.dir=0;
         P.state = WALKING_H;
+        }
       }
       else P.state = STANDING;
       // move up/down
-      if(pad & PAD_DOWN && P.y<212)
+      if(pad & PAD_DOWN )
       {
+        if(canPlayerMove(P.x+8 ,P.y+16)){
         P.y++;
         P.state = WALKING_V;
+        }
       }
-      else if(pad & PAD_UP && P.y>0)
+      else if(pad & PAD_UP )
       {
+        
+        if(canPlayerMove(P.x+8 ,P.y+5)){
         P.y--;
         P.state = WALKING_V;
+        }
       }
-      
+      //vram_adr(NTADR_A(0,0));
       // draw and move player
       switch (P.state){
         case STANDING:

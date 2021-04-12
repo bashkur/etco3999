@@ -1,6 +1,49 @@
 #ifndef Consts
 #define Consts
 
+/// METASPRITES
+// define a 2x2 metasprite
+#define DEF_METASPRITE_2x2(name,code,pal)\
+const unsigned char name[]={\
+        0,      0,      (code)+0,   pal, \
+        0,      8,      (code)+1,   pal, \
+        8,      0,      (code)+2,   pal, \
+        8,      8,      (code)+3,   pal, \
+        128};
+
+// define a 2x2 metasprite, flipped horizontally
+#define DEF_METASPRITE_2x2_FLIP(name,code,pal)\
+const unsigned char name[]={\
+        8,      0,      (code)+0,   (pal)|OAM_FLIP_H, \
+        8,      8,      (code)+1,   (pal)|OAM_FLIP_H, \
+        0,      0,      (code)+2,   (pal)|OAM_FLIP_H, \
+        0,      8,      (code)+3,   (pal)|OAM_FLIP_H, \
+        128};
+
+// right facing
+DEF_METASPRITE_2x2(playerRStand, 0x80, 0);
+DEF_METASPRITE_2x2(playerRRun1, 0x84, 0);
+DEF_METASPRITE_2x2(playerRRun2, 0x88, 0);
+DEF_METASPRITE_2x2(playerRRun3, 0x8c, 0);
+DEF_METASPRITE_2x2(playerRJump, 0x90, 0);
+
+// left facing
+DEF_METASPRITE_2x2_FLIP(playerLStand, 0x80, 0);
+DEF_METASPRITE_2x2_FLIP(playerLRun1, 0x84, 0);
+DEF_METASPRITE_2x2_FLIP(playerLRun2, 0x88, 0);
+DEF_METASPRITE_2x2_FLIP(playerLRun3, 0x8c, 0);
+DEF_METASPRITE_2x2_FLIP(playerLJump, 0x90, 0);
+
+// player run sequence
+const unsigned char* const playerRunSeq[16] = {
+  playerLRun1, playerLRun2, playerLRun3, 
+  playerLRun1, playerLRun2, playerLRun3, 
+  playerLRun1, playerLRun2,
+  playerRRun1, playerRRun2, playerRRun3, 
+  playerRRun1, playerRRun2, playerRRun3, 
+  playerRRun1, playerRRun2,
+};
+
 
 /*{pal:"nes",layout:"nes"}*/
 const char PALETTE[32] = { 
@@ -16,6 +59,7 @@ const char PALETTE[32] = {
   0x0D,0x2D,0x3A,0x00,	// sprite palette 2
   0x0D,0x27,0x2A	// sprite palette 3
 };
+
 const unsigned char map1[285]={
 0x02,0x01,0x02,0x21,0x00,0x02,0x1b,0x01,0x02,0x03,0x00,0x02,0x1b,0x01,0x02,0x03,
 0x00,0x02,0x1b,0x01,0x02,0x03,0x00,0x0e,0x00,0x02,0x07,0x0e,0x00,0x02,0x04,0x0e,
@@ -37,11 +81,6 @@ const unsigned char map1[285]={
 0x53,0x00,0x02,0x04,0xf1,0xf2,0xf3,0x01,0x02,0x41,0x01,0x02,0x00
 };
 
-
-
-
-
-
 const unsigned char map2[213]={
 0x01,0x51,0x01,0x6a,0x00,0x01,0x10,0x51,0x01,0x0e,0x00,0x01,0x10,0x51,0x01,0x0e,
 0x00,0x01,0x10,0x51,0x01,0x0e,0x00,0x01,0x02,0x51,0x01,0x09,0x00,0x01,0x03,0x51,
@@ -57,54 +96,6 @@ const unsigned char map2[213]={
 0x03,0x51,0x01,0x1b,0x00,0x01,0x03,0x51,0x01,0x05,0x86,0x87,0x00,0x01,0x17,0x51,
 0x01,0x05,0x96,0x97,0x00,0x01,0x17,0x51,0x01,0x05,0xa6,0xa7,0x00,0x01,0x17,0x51,
 0x01,0x22,0x51,0x01,0x00
-};
-
-const unsigned char idle[]={
-        0,      0,      0x80+0,   0, 
-        0,      8,      0x80+1,   0, 
-        8,      0,      0x80+2,   0, 
-        8,      8,      0x80+3,   0, 
-        128};
-
-const unsigned char run1[] = {
-        0,      0,      0x84+0,   0, 
-        0,      8,      0x84+1,   0, 
-        8,      0,      0x84+2,   0, 
-        8,      8,      0x84+3,   0, 
-        128};
-const unsigned char run2[] = {
-        0,      0,      0x88+0,   0, 
-        0,      8,      0x88+1,   0, 
-        8,      0,      0x88+2,   0, 
-        8,      8,      0x88+3,   0, 
-        128};
-
-const unsigned char run3[] = {
-  0,      0,      0x8c+0,   0, 
-  0,      8,      0x8c+1,   0, 
-  8,      0,      0x8c+2,   0, 
-  8,      8,      0x8c+3,   0, 
-  128};
-
-const unsigned char run4[] = {
-  0,      0,      0x90+0,   0, 
-  0,      8,      0x90+1,   0, 
-  8,      0,      0x90+2,   0, 
-  8,      8,      0x90+3,   0, 
-  128};
-
-
-struct Entity{
-  unsigned char x;
-  unsigned char y;
-  unsigned char health;
-  const unsigned char* CurSprite;
-  unsigned char is_player;
-};
-
-struct GameState{
-  const unsigned char* CurMap;
-  
 };
 
 

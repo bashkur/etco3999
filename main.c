@@ -15,10 +15,23 @@
 // VRAM update buffer
 //#link "vrambuf.c"
 
-// enable horizontal scrolling
-//#define NES_MIRRORING 1
+struct Entity{
+  unsigned char x;
+  unsigned char y;
+  unsigned char dir;		// facing direction (0=right, 1=left)
+  byte state;			// EntityState
+  unsigned char health;
+  const unsigned char* CurSprite;
+  unsigned char is_player;
+};
 
+struct GameState{
+  const unsigned char* CurMap;
+};
 
+typedef enum EntityState {
+  STANDING, WALKING_H, WALKING_V
+};
 
 
 // setup PPU and tables
@@ -29,20 +42,19 @@ void setup_graphics() {
   pal_all(PALETTE);
 }
 
-
-
 void main(void)
 {
-  const unsigned char* runanimright[] = {run1,run2,run3,run4};
   struct Entity P = {
-    8,100,100,run3,1
+    8, 100, 1, STANDING, 100, playerRStand, 1
   };
   struct GameState GS = {
     map1
   };
-  char i = 3;
+  
+  char oam_id;    // sprite ID
   char state = 0;
-  char pad;
+  char pad;	  // controller flags
+  
   setup_graphics();
    
   bank_bg(1);
@@ -57,36 +69,51 @@ void main(void)
   
   // infinite loop
     while(1) {
-      // do this at the start of each frame
-      char oam_id = 0;
+      oam_id = 0;
       
-      // input polling and movement
+      // poll controller
       pad = pad_poll(0);
-      if(pad & PAD_LEFT)
+      // move left/right
+      if(pad & PAD_LEFT && P.x>0)
+      {
         P.x--;
-      else if(pad & PAD_RIGHT)
+        P.dir=1;
+        P.state = WALKING_H;
+      }
+      else if(pad & PAD_RIGHT && P.x<240)
+      {
         P.x++;
-      if(pad & PAD_DOWN)
+        P.dir=0;
+        P.state = WALKING_H;
+      }
+      else P.state = STANDING;
+      // move up/down
+      if(pad & PAD_DOWN && P.y<212)
+      {
         P.y++;
-      else if(pad & PAD_UP)
+        P.state = WALKING_V;
+      }
+      else if(pad & PAD_UP && P.y>0)
+      {
         P.y--;
+        P.state = WALKING_V;
+      }
       
-      // Do this when "drawing" each sprite
-      P.CurSprite = runanimright[i];
+      // draw and move player
+      switch (P.state){
+        case STANDING:
+          P.CurSprite = P.dir ? playerLStand : playerRStand;
+          break;
+        case WALKING_H:
+          P.CurSprite = playerRunSeq[(P.x%7) + (P.dir?0:8)];
+          break;
+        case WALKING_V:
+          P.CurSprite = playerRunSeq[(P.y%7) + (P.dir?0:8)];
+          break;
+      }
       oam_id = oam_meta_spr(P.x, P.y, oam_id, P.CurSprite);
-      // Do this to "hide" any remaining sprites
       oam_hide_rest(oam_id);
-
-      if(!(P.x %15)){
-        --i;
-        if(i== 0){
-          i = 3;
-        }
-      }
-      if( P.x > 240  || P.x < 8){
-        state = !state;
-
-      }
+      
       vrambuf_flush();
     }
 }

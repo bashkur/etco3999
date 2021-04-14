@@ -15,6 +15,8 @@
 // VRAM update buffer
 //#link "vrambuf.c"
 
+#define PICKUPSMAP1 2
+#define PICKUPSMAP2 0
 struct Entity{
   unsigned char x;
   unsigned char y;
@@ -25,9 +27,7 @@ struct Entity{
   unsigned char is_player;
 };
 
-struct GameState{
-  const unsigned char* CurMap;
-};
+
 
 typedef enum EntityState {
   STANDING, WALKING_H, WALKING_V
@@ -43,26 +43,38 @@ void setup_graphics() {
 }
 
 
-char debug1;
 
+char debug1;
+struct pickup temp={120,160,1,0x14};
+struct pickup temp2={120,180,1,0x14};
+struct pickup* Map1items[PICKUPSMAP1] = {&temp,&temp2};
+
+
+struct GameState GS = {
+    map1,Map1items,PICKUPSMAP1
+  };
 void main(void)
 {
+  char i;
   struct Entity P = {
     25, 125, 1, STANDING, 100, playerRStand, 1
   };
-  struct GameState GS = {
-    map1
-  };
+  
   
   char oam_id;    // sprite ID
   char state = 0;
   char pad;	  // controller flags
-  
+
   setup_graphics();
    
   bank_bg(1);
   vram_adr(NTADR_A(0,4));
   vram_unrle(GS.CurMap);
+  for(i = 0;i < GS.MapPickupNum ;++i){
+      vram_adr(NTADR_A((*GS.Currentitems[i]).x/8,(*GS.Currentitems[i]).y/8));
+      vram_put(0xA4);
+      }
+  
   
   vrambuf_clear();
   set_vram_update(updbuf);
@@ -78,7 +90,8 @@ void main(void)
       // poll controller
       pad = pad_poll(0);
       // move left/right
-      //ppu_wait_nmi();
+      ppu_wait_nmi();
+      //ppu_wait_frame();
       if(pad & PAD_LEFT )
       {
         if(canPlayerMove(P.x,P.y+8)){
@@ -112,6 +125,7 @@ void main(void)
         P.state = WALKING_V;
         }
       }
+      
       //vram_adr(NTADR_A(0,0));
       // draw and move player
       switch (P.state){
@@ -125,6 +139,16 @@ void main(void)
           P.CurSprite = playerRunSeq[(P.y%7) + (P.dir?0:8)];
           break;
       }
+      
+      for(i = 0;i < GS.MapPickupNum ;++i){
+        if((*GS.Currentitems[i]).status)
+        oam_id = oam_spr((*GS.Currentitems[i]).x,(*GS.Currentitems[i]).y,
+                          (*GS.Currentitems[i]).sprite,0,oam_id);
+        
+      }
+      
+      
+      
       oam_id = oam_meta_spr(P.x, P.y, oam_id, P.CurSprite);
       oam_hide_rest(oam_id);
       

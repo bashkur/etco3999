@@ -20,6 +20,8 @@ const unsigned char name[]={\
         0,      8,      (code)+3,   (pal)|OAM_FLIP_H, \
         128};
 
+
+
 // right facing
 DEF_METASPRITE_2x2(playerRStand, 0x80, 0);
 DEF_METASPRITE_2x2(playerRRun1, 0x84, 0);

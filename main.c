@@ -26,7 +26,14 @@ struct Entity{
   const unsigned char* CurSprite;
   unsigned char is_player;
 };
-
+struct hud{
+  unsigned char hx;
+  unsigned char hy;
+  unsigned char ex;
+  unsigned char ey;
+  bool pickup;
+  unsigned char numpickups;
+};
 
 
 typedef enum EntityState {
@@ -57,14 +64,16 @@ void main(void)
 {
   char i;
   struct Entity P = {
-    25, 125, 1, STANDING, 100, playerRStand, 1
+    25, 125, 1, STANDING, 8, playerRStand, 1
   };
-  
+   struct hud H = {
+    10,10,10,20,true,0
+  };
   
   char oam_id;    // sprite ID
   char state = 0;
   char pad;	  // controller flags
-
+  
   setup_graphics();
    
   bank_bg(1);
@@ -146,6 +155,25 @@ void main(void)
                           (*GS.Currentitems[i]).sprite,0,oam_id);
         
       }
+      for(i=0; i < P.health+2; i++){
+        if(i==0)
+        oam_id = oam_spr(H.hx+i*7,H.hy,0x48,0,oam_id);
+        else if(i==1)
+          oam_id = oam_spr(H.hx+i*7,H.hy,0x50,0,oam_id);
+        else oam_id = oam_spr(H.hx+i*9+9,H.hy,0x15,0,oam_id);
+      }
+          for(i=0; i < P.health+3; i++){
+        if(i==0)
+        oam_id = oam_spr(H.ex+i*7,H.ey,0x45,0,oam_id);
+        else if(i==1)
+          oam_id = oam_spr(H.ex+i*7,H.ey,0x48,0,oam_id);
+        else if(i==2)
+          oam_id = oam_spr(H.ex+i*7,H.ey,0x50,0,oam_id);
+        else oam_id = oam_spr(H.ex+i*9,H.ey,0x15,0,oam_id);
+      }
+      if(H.pickup)
+        oam_id = oam_spr(130,20,0x14,0,oam_id);
+        oam_id = oam_spr(140,20,0x30+H.numpickups,0,oam_id);
       
       
       

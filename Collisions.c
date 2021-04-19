@@ -2,6 +2,8 @@
 
 #include <neslib.h>
 
+
+
 unsigned char isColliding(unsigned char x,unsigned char y){
   x + y;
  return 1; 
@@ -30,14 +32,19 @@ unsigned char canPlayerMove(unsigned char x,unsigned char y){
 
 }
 extern struct GameState GS;
+extern struct hud H;
 void pickupSprite(unsigned char x,unsigned char y){
   char i;
   for( i = 0; i < GS.MapPickupNum; ++i){
     if((*GS.Currentitems[i]).x/8 == x && (*GS.Currentitems[i]).y/8 == y){
-      (*GS.Currentitems[i]).status = 0;
+      if((*GS.Currentitems[i]).status){
+        (*GS.Currentitems[i]).status = 0;
+        H.numpickups++;
+      }
     }
   }
 }
+
 unsigned char overDoor(unsigned char x,unsigned char y){
   unsigned char tile;
   x = x/8;

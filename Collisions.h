@@ -18,6 +18,15 @@ struct GameState{
   
 };
 
+struct hud {
+  unsigned char hx;
+  unsigned char hy;
+  unsigned char ex;
+  unsigned char ey;
+  char pickup;
+  unsigned char numpickups;
+};
+
 struct pickup{
   unsigned char x;
   unsigned char y;

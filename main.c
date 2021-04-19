@@ -6,7 +6,9 @@
 #include "Collisions.h"
 #include "vrambuf.h"
 #include "ConstData.h"
+#include "apu.h"
 
+//#link "apu.c"
 // link the pattern table into CHR ROM
 //#link "chr_generic.s"
 // BCD arithmetic support
@@ -17,6 +19,10 @@
 
 #define PICKUPSMAP1 2
 #define PICKUPSMAP2 0
+
+unsigned char apu_state = 0;
+
+
 
 unsigned char bright;
 
@@ -36,14 +42,9 @@ struct Entity {
   const unsigned char* CurSprite;
   unsigned char is_player;
 };
-struct hud {
-  unsigned char hx;
-  unsigned char hy;
-  unsigned char ex;
-  unsigned char ey;
-  bool pickup;
-  unsigned char numpickups;
-};
+
+
+
 struct GameState GS = {
     map1,Map1items,PICKUPSMAP1
   };
@@ -56,6 +57,9 @@ struct Entity player = {
   25, 200, 0, STANDING, 8, playerRStand, 1
   };
 
+struct hud H = {
+    10,10,10,20,1,0
+  };
 // setup PPU and tables
 void setup_graphics() {
   // clear sprites
@@ -95,9 +99,7 @@ void transition_to_map(const unsigned char* map) {
 void main(void)
 {
   char i;
-   struct hud H = {
-    10,10,10,20,true,0
-  };
+   
   
   char oam_id;    // sprite ID
   char state = 0;
@@ -132,14 +134,14 @@ void main(void)
       // move left/right
       if(pad & PAD_LEFT) {
         if(canPlayerMove(player.x,player.y+8)){
-        player.x--;
+        player.x-=2;
         player.dir=1;
         player.state = WALKING_H;
         }
       }
       else if(pad & PAD_RIGHT) {
         if(canPlayerMove(player.x +14,player.y+8)){
-        player.x++;
+        player.x+=2;
         player.dir=0;
         player.state = WALKING_H;
         }
@@ -148,13 +150,13 @@ void main(void)
       // move up/down
       if(pad & PAD_DOWN) {
         if(canPlayerMove(player.x+8 ,player.y+16)){
-        player.y++;
+        player.y+=2;
         player.state = WALKING_V;
         }
       }
       else if(pad & PAD_UP) {
         if(canPlayerMove(player.x+8, player.y+5)){
-        player.y--;
+        player.y-=2;
         player.state = WALKING_V;
         }
       }

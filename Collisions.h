@@ -4,6 +4,7 @@
 unsigned char isColliding(unsigned char x,unsigned char y);
 
 unsigned char canPlayerMove(unsigned char x,unsigned char y);
+//unsigned char canPlayerMove(unsigned char x,unsigned char y,char* suround,char dir);
 
 void pickupSprite(unsigned char x,unsigned char y);
   

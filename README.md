@@ -1,4 +1,4 @@
-NES game demo
+NES game tech demo
 =====
 
 [Open this project in 8bitworkshop](https://8bitworkshop.com/v3.9.0/?repo=bashkur%2Fetco3999&platform=nes&file=main.c).  
